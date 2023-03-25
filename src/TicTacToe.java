@@ -1,5 +1,9 @@
 import javax.swing.*;
+import javax.swing.border.MatteBorder;
 import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.net.URL;
 import java.util.Objects;
 
@@ -21,8 +25,15 @@ public class TicTacToe extends JFrame {
     private JPanel Buttons;
     private JPanel Label;
 
+    public JPanel[] cellsList = {cell1, cell2, cell3, cell4, cell5, cell6, cell7, cell8, cell9};
+
     URL iconURL = getClass().getResource("img/icon.png");
     ImageIcon icon = new ImageIcon(Objects.requireNonNull(iconURL));
+
+    URL crossURL = getClass().getResource("img/cross.png");
+    ImageIcon cross = new ImageIcon(Objects.requireNonNull(crossURL));
+    URL circleURL = getClass().getResource("img/circle.png");
+    ImageIcon circle = new ImageIcon(Objects.requireNonNull(circleURL));
 
     public TicTacToe() {
         super("Tic Tac Toe");
@@ -31,6 +42,27 @@ public class TicTacToe extends JFrame {
         this.setIconImage(icon.getImage());
         this.setContentPane(mainPanel);
 
+        for (int i=0;i<cellsList.length; i++) {
+            int finalI = i;
+            cellsList[i].addMouseListener(new MouseAdapter() {
+                public void mouseClicked(MouseEvent e) {
+                    panelClick(cellsList[finalI]);
+                }
+        });
+        }
+    }
+
+    public void panelClick(JPanel panel) {
+        JLabel img = new JLabel();
+        img.setIcon(circle);
+        img.setHorizontalAlignment(SwingConstants.CENTER);
+        panel.add(img);
+        revalidate();
+        repaint();
+        var tab = panel.getMouseListeners();
+        for (MouseListener e : tab) {
+            panel.removeMouseListener(e);
+        }
     }
 
     public static void setBorders(TicTacToe frame) {
@@ -44,15 +76,14 @@ public class TicTacToe extends JFrame {
         var border8 = BorderFactory.createMatteBorder(3,3,0,3, Color.WHITE);
         var border9 = BorderFactory.createMatteBorder(3,3,0,0, Color.WHITE);
 
-        frame.cell1.setBorder(border1);
-        frame.cell2.setBorder(border2);
-        frame.cell3.setBorder(border3);
-        frame.cell4.setBorder(border4);
-        frame.cell5.setBorder(border5);
-        frame.cell6.setBorder(border6);
-        frame.cell7.setBorder(border7);
-        frame.cell8.setBorder(border8);
-        frame.cell9.setBorder(border9);
+        MatteBorder[] tab = {border1, border2, border3, border4, border5, border6, border7, border8, border9};
+
+        var dim = new Dimension(96, 96);
+
+        for (int i=0; i<frame.cellsList.length; i++) {
+            frame.cellsList[i].setBorder(tab[i]);
+            frame.cellsList[i].setPreferredSize(dim);
+        }
     }
 
     public static void main(String[] args) {

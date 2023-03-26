@@ -1,9 +1,7 @@
 import javax.swing.*;
 import javax.swing.border.MatteBorder;
 import java.awt.*;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
+import java.awt.event.*;
 import java.net.URL;
 import java.util.Objects;
 
@@ -25,7 +23,11 @@ public class TicTacToe extends JFrame {
     private JPanel Buttons;
     private JPanel Label;
 
-    public JPanel[] cellsList = {cell1, cell2, cell3, cell4, cell5, cell6, cell7, cell8, cell9};
+    JPanel[][] cellsList = {
+            {cell1, cell2, cell3},
+            {cell4, cell5, cell6},
+            {cell7, cell8, cell9}
+    };
 
     URL iconURL = getClass().getResource("img/icon.png");
     ImageIcon icon = new ImageIcon(Objects.requireNonNull(iconURL));
@@ -35,6 +37,15 @@ public class TicTacToe extends JFrame {
     URL circleURL = getClass().getResource("img/circle.png");
     ImageIcon circle = new ImageIcon(Objects.requireNonNull(circleURL));
 
+    ImageIcon humanSymbol;
+    ImageIcon botSymbol;
+
+    int[][] board = {
+            {0, 0, 0},
+            {0, 0, 0},
+            {0, 0, 0}
+    };
+
     public TicTacToe() {
         super("Tic Tac Toe");
         this.setDefaultCloseOperation(EXIT_ON_CLOSE);
@@ -42,19 +53,47 @@ public class TicTacToe extends JFrame {
         this.setIconImage(icon.getImage());
         this.setContentPane(mainPanel);
 
-        for (int i=0;i<cellsList.length; i++) {
-            int finalI = i;
-            cellsList[i].addMouseListener(new MouseAdapter() {
-                public void mouseClicked(MouseEvent e) {
-                    panelClick(cellsList[finalI]);
+        humanButton.addActionListener(e -> {
+            humanSymbol = circle;
+            botSymbol = cross;
+
+            for (int i=0;i<cellsList.length; i++) {
+                for (int j=0;j<cellsList[i].length; j++) {
+                    int finalJ = j;
+                    int finalI = i;
+                    cellsList[i][j].addMouseListener(new MouseAdapter() {
+                        public void mouseClicked(MouseEvent e) {
+                            panelClick(cellsList[finalI][finalJ]);
+                        }
+                    });
                 }
+            }
+            humanButton.setEnabled(false);
+            botButton.setEnabled(false);
         });
-        }
+
+        botButton.addActionListener(e -> {
+            humanSymbol = cross;
+            botSymbol = circle;
+            for (int i=0;i<cellsList.length; i++) {
+                for (int j=0;j<cellsList[i].length; j++) {
+                    int finalJ = j;
+                    int finalI = i;
+                    cellsList[i][j].addMouseListener(new MouseAdapter() {
+                        public void mouseClicked(MouseEvent e) {
+                            panelClick(cellsList[finalI][finalJ]);
+                        }
+                    });
+                }
+            }
+            humanButton.setEnabled(false);
+            botButton.setEnabled(false);
+        });
     }
 
     public void panelClick(JPanel panel) {
         JLabel img = new JLabel();
-        img.setIcon(circle);
+        img.setIcon(humanSymbol);
         img.setHorizontalAlignment(SwingConstants.CENTER);
         panel.add(img);
         revalidate();
@@ -62,6 +101,15 @@ public class TicTacToe extends JFrame {
         var tab = panel.getMouseListeners();
         for (MouseListener e : tab) {
             panel.removeMouseListener(e);
+        }
+
+        System.out.println();
+        for (int i=0;i<cellsList.length; i++) {
+            for (int j=0;j<cellsList[i].length; j++) {
+                if (cellsList[i][j].equals(panel)) board[i][j] = -1;
+                System.out.print(board[i][j] + " ");
+            }
+            System.out.println();
         }
     }
 
@@ -76,19 +124,19 @@ public class TicTacToe extends JFrame {
         var border8 = BorderFactory.createMatteBorder(3,3,0,3, Color.WHITE);
         var border9 = BorderFactory.createMatteBorder(3,3,0,0, Color.WHITE);
 
-        MatteBorder[] tab = {border1, border2, border3, border4, border5, border6, border7, border8, border9};
+        MatteBorder[][] tab = {
+                {border1, border2, border3},
+                {border4, border5, border6},
+                {border7, border8, border9}
+        };
 
         var dim = new Dimension(96, 96);
 
-        for (int i=0; i<frame.cellsList.length; i++) {
-            frame.cellsList[i].setBorder(tab[i]);
-            frame.cellsList[i].setPreferredSize(dim);
+        for (int i=0;i<frame.cellsList.length; i++) {
+            for (int j=0;j<frame.cellsList[i].length; j++) {
+                frame.cellsList[i][j].setBorder(tab[i][j]);
+                frame.cellsList[i][j].setPreferredSize(dim);
+            }
         }
-    }
-
-    public static void main(String[] args) {
-        var frame = new TicTacToe();
-        setBorders(frame);
-        frame.setVisible(true);
     }
 }

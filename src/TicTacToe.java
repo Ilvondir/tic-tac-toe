@@ -91,28 +91,6 @@ public class TicTacToe extends JFrame {
         });
     }
 
-    public void panelClick(JPanel panel) {
-        JLabel img = new JLabel();
-        img.setIcon(humanSymbol);
-        img.setHorizontalAlignment(SwingConstants.CENTER);
-        panel.add(img);
-        revalidate();
-        repaint();
-        var tab = panel.getMouseListeners();
-        for (MouseListener e : tab) {
-            panel.removeMouseListener(e);
-        }
-
-        System.out.println();
-        for (int i=0;i<cellsList.length; i++) {
-            for (int j=0;j<cellsList[i].length; j++) {
-                if (cellsList[i][j].equals(panel)) board[i][j] = -1;
-                System.out.print(board[i][j] + " ");
-            }
-            System.out.println();
-        }
-    }
-
     public static void setBorders(TicTacToe frame) {
         var border1 = BorderFactory.createMatteBorder(0,0,3,3, Color.WHITE);
         var border2 = BorderFactory.createMatteBorder(0,3,3,3, Color.WHITE);
@@ -138,5 +116,50 @@ public class TicTacToe extends JFrame {
                 frame.cellsList[i][j].setPreferredSize(dim);
             }
         }
+    }
+
+    public void panelClick(JPanel panel) {
+        JLabel img = new JLabel();
+        img.setIcon(humanSymbol);
+        img.setHorizontalAlignment(SwingConstants.CENTER);
+        panel.add(img);
+        revalidate();
+        repaint();
+        var tab = panel.getMouseListeners();
+        for (MouseListener e : tab) {
+            panel.removeMouseListener(e);
+        }
+
+        System.out.println();
+        for (int i=0;i<cellsList.length; i++) {
+            for (int j=0;j<cellsList[i].length; j++) {
+                if (cellsList[i][j].equals(panel)) board[i][j] = 1;
+                System.out.print(board[i][j] + " ");
+            }
+            System.out.println();
+        }
+        System.out.println(gameOver(board));
+    }
+
+    public boolean gameOver(int[][] board) {
+
+        if (board[0][0]==board[1][0] && board[1][0]==board[2][0] && board[0][0]!=0) return true;
+        if (board[0][1]==board[1][1] && board[1][1]==board[2][1] && board[0][1]!=0) return true;
+        if (board[0][2]==board[1][2] && board[1][2]==board[2][2] && board[0][2]!=0) return true;
+
+        if (board[0][0]==board[0][1] && board[0][1]==board[0][2] && board[0][0]!=0) return true;
+        if (board[1][0]==board[1][1] && board[1][1]==board[1][2] && board[1][0]!=0) return true;
+        if (board[2][0]==board[2][1] && board[2][1]==board[2][2] && board[2][0]!=0) return true;
+
+        if (board[0][0]==board[1][1] && board[1][1]==board[2][2] && board[0][0]!=0) return true;
+        if (board[0][2]==board[1][1] && board[1][1]==board[2][0] && board[0][2]!=0) return true;
+
+        for (int i=0;i<cellsList.length; i++) {
+            for (int j=0;j<cellsList[i].length; j++) {
+                if (board[i][j] == 0) return false;
+            }
+        }
+
+        return true;
     }
 }

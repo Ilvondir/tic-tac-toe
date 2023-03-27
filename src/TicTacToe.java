@@ -20,9 +20,6 @@ public class TicTacToe extends JFrame {
     private JPanel cell7;
     private JPanel cell8;
     private JPanel cell9;
-    private JPanel Board;
-    private JPanel Buttons;
-    private JPanel Label;
 
     JPanel[][] cellsList = {
             {cell1, cell2, cell3},
@@ -194,12 +191,12 @@ public class TicTacToe extends JFrame {
             humanButton.setEnabled(true);
             botButton.setEnabled(true);
 
-            for (int i=0;i<cellsList.length; i++) {
-                for (int j=0;j<cellsList[i].length; j++) {
+            for (JPanel[] jPanels : cellsList) {
+                for (JPanel jPanel : jPanels) {
 
-                    var tab3 = cellsList[i][j].getMouseListeners();
+                    var tab3 = jPanel.getMouseListeners();
                     for (MouseListener e : tab3) {
-                        cellsList[i][j].removeMouseListener(e);
+                        jPanel.removeMouseListener(e);
                     }
                 }
             }
@@ -260,9 +257,9 @@ public class TicTacToe extends JFrame {
 
         for (int e : results) {
             if (maximizing) {
-                if (e > bestResult) bestResult = e;
+                if (e >= bestResult) bestResult = e;
             } else {
-                if (e < bestResult) bestResult = e;
+                if (e <= bestResult) bestResult = e;
             }
         }
 
@@ -304,7 +301,7 @@ public class TicTacToe extends JFrame {
             if (board[0][0] == 1) {
                 score += 50;
             } else if (board[0][0] == -1) {
-                score -= 60;
+                score -= 50;
             }
         }
 
@@ -312,7 +309,7 @@ public class TicTacToe extends JFrame {
             if (board[0][2] == 1) {
                 score += 50;
             } else if (board[0][2] == -1) {
-                score -= 60;
+                score -= 50;
             }
         }
 

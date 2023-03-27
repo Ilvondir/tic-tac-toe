@@ -64,6 +64,15 @@ public class TicTacToe extends JFrame {
                 for (int j=0;j<cellsList[i].length; j++) {
                     int finalJ = j;
                     int finalI = i;
+                    gameBoard[finalI][finalJ] = 0;
+
+                    var comps = cellsList[finalI][finalJ].getComponents();
+                    for (var comp : comps) {
+                        cellsList[finalI][finalJ].remove(comp);
+                    }
+                    revalidate();
+                    repaint();
+
                     cellsList[i][j].addMouseListener(new MouseAdapter() {
                         public void mouseClicked(MouseEvent e) {
                             panelClick(cellsList[finalI][finalJ]);
@@ -82,6 +91,15 @@ public class TicTacToe extends JFrame {
                 for (int j=0;j<cellsList[i].length; j++) {
                     int finalJ = j;
                     int finalI = i;
+                    gameBoard[finalI][finalJ] = 0;
+
+                    var comps = cellsList[finalI][finalJ].getComponents();
+                    for (var comp : comps) {
+                        cellsList[finalI][finalJ].remove(comp);
+                    }
+                    revalidate();
+                    repaint();
+
                     cellsList[i][j].addMouseListener(new MouseAdapter() {
                         public void mouseClicked(MouseEvent e) {
                             panelClick(cellsList[finalI][finalJ]);
@@ -138,7 +156,7 @@ public class TicTacToe extends JFrame {
     }
 
     public void panelClick(JPanel panel) {
-        System.out.println();
+
         for (int i=0;i<cellsList.length; i++) {
             for (int j=0;j<cellsList[i].length; j++) {
                 if (cellsList[i][j].equals(panel)) gameBoard[i][j] = 1;
@@ -170,6 +188,25 @@ public class TicTacToe extends JFrame {
         var tab2 = cellsList[x][y].getMouseListeners();
         for (MouseListener e : tab2) {
             cellsList[x][y].removeMouseListener(e);
+        }
+
+        if (gameOver(gameBoard)) {
+            humanButton.setEnabled(true);
+            botButton.setEnabled(true);
+
+            for (int i=0;i<cellsList.length; i++) {
+                for (int j=0;j<cellsList[i].length; j++) {
+
+                    var tab3 = cellsList[i][j].getMouseListeners();
+                    for (MouseListener e : tab3) {
+                        cellsList[i][j].removeMouseListener(e);
+                    }
+                }
+            }
+
+            if (winner(gameBoard)==1) JOptionPane.showMessageDialog(this, "You win!", "Game over", JOptionPane.ERROR_MESSAGE);
+            else if (winner(gameBoard)==-1)JOptionPane.showMessageDialog(this, "Bot win!", "Game over", JOptionPane.ERROR_MESSAGE);
+            else JOptionPane.showMessageDialog(this, "No one win!", "Game over", JOptionPane.WARNING_MESSAGE);
         }
     }
 
@@ -267,7 +304,7 @@ public class TicTacToe extends JFrame {
             if (board[0][0] == 1) {
                 score += 50;
             } else if (board[0][0] == -1) {
-                score -= 50;
+                score -= 60;
             }
         }
 
@@ -275,7 +312,7 @@ public class TicTacToe extends JFrame {
             if (board[0][2] == 1) {
                 score += 50;
             } else if (board[0][2] == -1) {
-                score -= 50;
+                score -= 60;
             }
         }
 

@@ -27,6 +27,9 @@ public class TicTacToe extends JFrame {
             {cell7, cell8, cell9}
     };
 
+    int alpha = -500;
+    int beta = 500;
+
     URL iconURL = getClass().getResource("img/icon.png");
     ImageIcon icon = new ImageIcon(Objects.requireNonNull(iconURL));
 
@@ -107,7 +110,10 @@ public class TicTacToe extends JFrame {
             humanButton.setEnabled(false);
             botButton.setEnabled(false);
 
+            long t1 = System.nanoTime();
             minimax(false, gameBoard);
+            long t2 = System.nanoTime();
+            System.out.println(t2-t1);
 
             int x = (int)Math.floor(indexOfBestResult/3);
             int y = indexOfBestResult%3;
@@ -239,10 +245,22 @@ public class TicTacToe extends JFrame {
             for (int j = 0; j < 3; j++) {
                 if (board[i][j] == 0) {
 
+                    if (maximizing) {
+                        if (results.contains(beta)) {
+                            results.add(Integer.MIN_VALUE);
+                            break;
+                        }
+                    } else {
+                        if (results.contains(alpha)) {
+                            results.add(Integer.MAX_VALUE);
+                            break;
+                        }
+                    }
+
                     board[i][j] = maximizing ? 1 : -1;
                     results.add(minimax(!maximizing, board));
-
                     board[i][j] = 0;
+
                 } else {
                     if (maximizing) results.add(Integer.MIN_VALUE);
                     else results.add(Integer.MAX_VALUE);
@@ -271,8 +289,8 @@ public class TicTacToe extends JFrame {
     public int scores(int[][] board) {
 
         if (gameOver(board)) {
-            if (winner(board)==1) return Integer.MAX_VALUE;
-            if (winner(board)==-1) return Integer.MIN_VALUE;
+            if (winner(board)==1) return 500;
+            if (winner(board)==-1) return -500;
         }
 
         int score = 0;
